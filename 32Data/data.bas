@@ -4,7 +4,7 @@
 ' Creating and reading tables
 '------------------------------------------------ -------------
 '$sim                                    '!!!Odstranit pøi programování - zrychlení simulace (odstraní èasové prodlevy)
-$regfile = "m88def.dat"                                     ' specify the used micro
+$regfile = "m8def.dat"                                     ' specify the used micro
 $baud = 9600
 $crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
