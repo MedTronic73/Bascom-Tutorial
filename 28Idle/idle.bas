@@ -1,54 +1,54 @@
-'''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''
 '
-'  Idle.bas
+' Idle.bass
 '
-'  Uvedeme procesor do stavu Idle a probudíme ho pøerušením od pøeteèení Timer1
+' We put the processor in the Idle state and wake it up with an interrupt from the Timer1 overflow
 '
-'''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''
 '$sim
-$regfile = "m88def.dat"                 ' specify the used micro
+$regfile = "m8def.dat"                                      ' specify the used micro
 $baud = 9600
-$crystal = 8000000                      ' used crystal frequency
+$crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
-Config Timer1 = Timer , Prescale = 1024 'pøeteèe asi za 8s
-Config Aci = Off                        'vypni komparátor (další zmenšení spotøeby)
+Config Timer1 = Timer , Prescale = 1024                     'will flow in about 8 seconds
+Config Aci = Off                                            'turn off the comparator (further reduction of consumption)
 
-Enable Interrupts                       'povol pøerušení
-Enable Timer1                           'povol pøerušení pøi pøeteèení Timer1
-On Timer1 Timer1_isr                    'pøi pøerušení jdi na
-Cursor Off                              'vypni LCD kurzor
+Enable Interrupts                                           'enable interrupts
+Enable Timer1                                               'enable interrupt on Timer1 overflow
+On Timer1 Timer1_isr                                        'when interrupted go to
+Cursor Off                                                  'turn off the LCD cursor
 
 Print "reset"
 Wait 1
 
-'''''''''''''''''''''''''''' HLAVNI PROGRAM ''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''' MAIN PROGRAM ''''''''''''''''''''''''''''''''''''
 
 Do
     Print "spim"
     Wait 1
-    Idle                                'tady usne
+    Idle                                                    'he falls asleep here
 
-    Print "bdim"                        'tady pokraèuje po probuzení
+    Print "bdim"                                            'here he continues after waking up
     Wait 1
 Loop
-'''''''''''''''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''
+'''''''''''''''''''''''''''' END OF MAIN PROGRAM ''''''''''''''''''''''''''
 End
 
 Timer1_isr:
 
       Cls
-      Lcd "prerus"
+      Lcd "break sleep"
       Waitms 500
 
 Return
-'pøíkaz Idle nemùže být použit v obsluze pøerušení !!!
+'command Idle cannot be used in interrupt handler !!!
 
-'V hlavním programu uspíme procesor pøíkazem Idle.
-'Po asi 8 vteøinách pøeteèe Timer1 a vyvolá pøerušení, které probudí procesor.
+'In the main program, we put the processor to sleep with the Idle command.
+'After about 8 seconds, Timer1 overflows and raises an interrupt that wakes up the processor.
 
-'Ve stavu Idle je odbìr proudu asi polovièní proti aktivnímu stavu.
-'Probudí se pøerušením, napø od èítaèù, vnìjším atd.
+'In the Idle state, the current consumption is about half that of the active state.
+'Woke up by interruption, eg from readers, external etc.
 

@@ -1,12 +1,12 @@
-'--------------------------------------------------------------
-'  I2C.bas
+'------------------------------------------------ -------------
+' I2C.bas
 '
-'  Zápis a ètení po sbìrnici I2C.
-'  Seriová EEprom 24c01 (02, 04) je pøipojena podle obr. I2c.jpg
-'--------------------------------------------------------------
+' Writing and reading over the I2C bus.
+' Serial EEprom 24c01 (02, 04) is connected according to Fig. I2c.jpg
+'------------------------------------------------ -------------
 '$sim
-$regfile = "m88def.dat"                 'Soubor s deklaracemi
-$crystal = 8000000                      'Kmitoèet krystalu v Hz
+$regfile = "m8def.dat"                                      'Soubor s deklaracemi
+$crystal = 8000000                                          'Kmitoèet krystalu v Hz
 $baud = 9600
 $hwstack = 100
 $swstack = 64
@@ -14,87 +14,90 @@ $framesize = 64
 
 
 'Sbìrnice i2c:
-Config Scl = Portd.2                    'i2c hodiny
-Config Sda = Portd.3                    'i2c data
+Config Scl = Portd.2                                        'i2c Clock
+Config Sda = Portd.3                                        'i2c data
 
-Declare Sub Write_eeprom(byval Adresa As Byte , Byval Value As Byte)       'zápis jednoho bajtu do eeprom
-Declare Sub Read_eeprom(byval Adresa As Byte , Value As Byte)       'ètení jednoho bajtu z eeprom
+Declare Sub Write_eeprom(byval Adresa As Byte , Byval Value As Byte)       'write one byte to eeprom
+Declare Sub Read_eeprom(byval Adresa As Byte , Value As Byte)       'reading one byte from eeprom
 
 Dim Adresa As Byte , Value As Byte
 
- ''''''''''''''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''
-'Zápis:
-'Na adresu 1 zapíšeme hodnotu 100:
-   Call Write_eeprom(1 , 100)
+''''''''''''''''''''''''' MAIN PROGRAM ''''''''''''''''''' ''''''''''''''
+'Registration:
+'We Write The Value 100 To Address 1:
 
-'Ètení:
-'Z adresy 1 pøeèteme hodnotu do promìnné Value:
-  Call Read_eeprom(1 , Value)
+Call Write_eeprom(1 , 100)
+
+'Reading:
+'From address 1, we read the value into the variable Value:
+
+Call Read_eeprom(1 , Value)
 
 
 
-'Na adresy 60 až 80 zapíšeme hodnoty 120 až 160:
+'At addresses 60 to 80 we write the values 120 to 160:
    For Adresa = 60 To 80
-   Value = Adresa * 2
-   Call Write_eeprom(adresa , Value)    'na adresu "adresa" zapiš hodnotu "value")
+      Value = Adresa * 2
+      Call Write_eeprom(adresa , Value)                     'in the address "address" write the value "value")
    Next
 
-'Zapsané hodnoty pøeèteme a zobrazíme:
+'We read the written values and display:
    Do
       For Adresa = 60 To 80
-          Call Read_eeprom(adresa , Value)       'èti na adrese a ulož do promìnné value
-          Print "Adr " ; Adresa ; "  " ; Value       'napiš adresu a hodnotu
-          Waitms 1000                   'èekej 1 sec
+          Call Read_eeprom(adresa , Value)                  'èti na adrese a ulož do promìnné value
+          Print "Adr " ; Adresa ; "  " ; Value              'napiš adresu a hodnotu
+          Waitms 1000                                       'èekej 1 sec
       Next
    Loop
 
- ''''''''''''''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''
+ ''''''''''''''''''''''''''' END OF MAIN PROGRAM ''''''''''''''''''''''''''
 End
 
-'Procedury pro zápis a ètení. Adresa èipu platí pro 24c01-04 s uzemnìnými
-'vývody A0,A1,A2. Pro jíný obvod je nutno procedury upravit.
+'Procedures for writing and reading. The chip address applies to 24c01-04 with grounded
+'terminals A0, A1, A2. Procedures must be modified for other circuits.
 
-'zápis do Eeprom
+'writing to Eeprom
+
 Sub Write_eeprom(byval Adresa As Byte , Byval Value As Byte)
-    I2cstart                            'start
-    I2cwbyte &HA0                       'adresa èipu, bit0=0 znamená zápis
-    I2cwbyte Adresa                     'adresa v EEPROM, na kterou budeme zapisovat
-    I2cwbyte Value                      'zapiš hodnotu Value
-    I2cstop                             'stop
-    Waitms 10                           'zápis trvá pár milisekund, poèkáme
+    I2cstart                                                'start
+    I2cwbyte &HA0                                           'chip address, bit0=0 means writing
+    I2cwbyte Adresa                                         'address in the EEPROM to which we will write
+    I2cwbyte Value                                          'write the value Value
+    I2cstop                                                 'stop
+    Waitms 10                                               'writing takes a few milliseconds, let's wait
 End Sub
 
 
-'ètení z Eeprom
+'Reading From Eeprom
 Sub Read_eeprom(byval Adresa As Byte , Value As Byte)
-   I2cstart                             'start
-   I2cwbyte &HA0                        'adresa èipu, bit0=0 znamená zápis
-   I2cwbyte Adresa                      'adresa v EEPROM, ze které budeme èíst
-   I2cstart                             'nový start
-   I2cwbyte &HA1                        'adresa èipu, bit0=1 znamená ètení
-   I2crbyte Value , Nack                'èti bajt do promìnné Value, neposílej ack
-   I2cstop                              'stop
+   I2cstart                                                 'start
+   I2cwbyte &HA0                                            'chip address, bit0=0 means writing
+   I2cwbyte Adresa                                          'address in EEPROM from which we will read
+   I2cstart                                                 'a new start
+   I2cwbyte &HA1                                            'chip address, bit0=1 means read
+   I2crbyte Value , Nack                                    'read a byte into the Value variable, do not send an ack
+   I2cstop                                                  'stop
 End Sub
 
 
 
-'Každá souèástka, která má zabudovanou komunikaci i2c, má urèený ètyøbitový
-'kód souèástky. U pamìti 24c02 je to 1010.
+'Each component that has built-in i2c communication has a designated four-bit
+'component code. For memory 24c02 it is 1010.
 
-'Dále má 24c02 tøi adresové vývody A0 A1 A2. Ty pøipojujeme na úrovnì 0 nebo 1
-'a tím nastavíme adresu konkrétní souèástky. Máme 8 možností, takže mùžeme
-'na jednu sbìrnici pøipojit až 8 pamìtí.
+'Furthermore, the 24c02 has three address pins A0 A1 A2. We connect them at level 0 or 1
+'and thus we set the address of a specific component. We have 8 options, so we can
+'Connect up to 8 memories to one bus.
 
-'Adresu èipu sestavíme takto:
+'We construct the chip address as follows:
 
-' 1010 000 0
+' 1010,000 0
 
-'První ètyøi bity je kód souèástky. Najdeme ho v datasheetu.
+'The first four bits are the part code. We can find it in the datasheet.
 
-'Další tøi bity je adresa souèástky (A2 A1 A0). My jsme všechny adresové vývody
-'uzemnili, takže adresa souèástky je 000.
+'The next three bits are the component address (A2 A1 A0). We are all address outlets
+'grounded, so the component address is 000.
 
-'Poslední bit znaèí, jestli chceme do èipu zapisovat (0), nebo èíst (1).
+'The last bit indicates whether we want to write (0) or read (1) to the chip.
 
-'U pamìti 24c04 bit A0 vybírá horní nebo dolní polovinu pamìti.
-'Adresu souèástky urèují bity A2 A1 takže jsou jen 4 možnosti.
+'For 24c04 memory, bit A0 selects the upper or lower half of the memory.
+'The address of the component is determined by bits A2 A1, so there are only 4 options.
