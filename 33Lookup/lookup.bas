@@ -1,58 +1,60 @@
-'--------------------------------------------------------------
+' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 '
-'  Lookup.bas
-'  Vyhledání hodnoty na dané pozici v tabulce
-'--------------------------------------------------------------
-'$sim                                   '!!!Odstranit pøi programování - zrychlení simulace (odstraní èasové prodlevy)
-$regfile = "m88def.dat"                 ' specify the used micro
+' Lookup.bas
+' Search for the value at the given position in the table
+'------------------------------------------------ -------------
+'$sim '           !!!Remove when programming - acceleration of simulation (removal of time delay)
+
+$regfile = "m8def.dat"                                     ' specify the used micro
 $baud = 9600
-$crystal = 8000000                      ' used crystal frequency
+$crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
-Dim Pozice As Integer , Hodnota As Byte
+Dim Position As Integer , Value As Byte
 
- ''''''''''''''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''
-'Tento pøíklad zkoušejte v simulátoru. Použijte tlaèítko "Run program".
+''''''''''''''''''''''''' MAIN PROGRAM ''''''''''''''''''' ''''''''''''''
+'Try this example in the simulator. Use the "Run program" button.
 
 Do
 
-'vstup z klávesnice ulož do promìnné "Pozice":
-    Input "Zadej pozici 0 až 15 [Enter] : " , Pozice
+'save the input from the keyboard to the "Position" variable:
+    Input "Enter position 0 to 15 [Enter] : " , Position
 
 'najdi hodnotu na zadané pozici v tabulce "Moje_tabulka" :
-    Hodnota = Lookup(pozice , Moje_tabulka)
+    Value = Lookup(Position , Moje_tabulka)
 
 'a vypiš
-    Print "Na pozici " ; Pozice ; " je hodnota " ; Hodnota
-    Print                               'prázdný øádek
+    Print "Na pozici " ; Position ; " je Value " ; Value
+    Print                                                   'blank line
 
 Loop
  ''''''''''''''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''
 End
 
-Moje_tabulka:                           'návìští
-Data 0 , 17 , 34 , 52 , 69 , 87 , 104 , 121 , 139 , 156 , 173 , 190 , 207 , 224 , 241       'hodnota
-'    0    1    2    3    4    5    6     7     8     9    10    11    12    13    14        'pozice
+Moje_tabulka:                                               'visits
+Data 0 , 17 , 34 , 52 , 69 , 87 , 104 , 121 , 139 , 156 , 173 , 190 , 207 , 224 , 241       'values
+' 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 'position
 
-'Když v programu potøebujeme hodnì konstant, vytvoøíme tabulku pøíkazem Data.
-'Bude uložena v pamìti programu, takže mùže být i dost velká.
-'V tabulce má zpravidla každá hodnota nìjaký vztah ke své pozici (ale není to nutné).
-'V této tabulce je sin 0°=0 , sin 1°=0.017 sin 2°=0.034 atd.
+'When we need a lot of constants in the program, we create a table with the Data command.
+'It will be stored in the program memory, so it can be quite large.
+'In the table, as a rule, each value has some relation to its position (but it is not necessary).
+'In this table, sin 0°=0, sin 1°=0.017, sin 2°=0.034, etc.
 
-'V tabulce musíme koncovkou urèit typ èísla. Koncovky jsou:
+'In the table, we have to specify the type of number with the ending. The endings are:
 
-'byte    - žádná   50
-'word    - %     1000%
-'integer - %      -12%
-'long    - &  1000000&
-'single  - !     3.14!
+'byte - none 50
+'word - % 1000%
+'integer - % -12%
+'long - & 1000000&
+'single - ! 3.14!
 
-'Tabulku píšeme na úplný konec kódu.
+'We write the table at the very end of the code.
 
-'Když chceme postupnì èíst hodnoty z tabulky, použijeme pøíkaz RESTORE a READ.(viz Data.bas)
-'Když chceme zjistit jaká hodnota je na urèité pozici, použijeme LOOKUP.
-'Když chceme zjistit na které pozici je urèitá hodnota, použijeme LOOKDOWN.   (viz Lookdown.bas)
-'U pøíkazu LOOKUP zaèínají pozice nulou, u pøíkazu LOOKDOWN jednièkou.
-'Promìnná, do které èteme, musí být stejného typu jako ètená hodnota.
+'When we want to read values ??from the table sequentially, we use the command RESTORE and READ. (see Data.bas)
+'When we want to find out what value is at a certain position, we use LOOKUP.
+'When we want to find out in which position a certain value is, we use LOOKDOWN. (see Lookdown.bas)
+'Positions start with zero for the LOOKUP command, and one for the LOOKDOWN command.
+'The variable we read into must be of the same type as the read value.
+

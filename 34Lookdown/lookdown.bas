@@ -1,35 +1,34 @@
-'--------------------------------------------------------------
+'------------------------------------------------ -------------
 '
-'  Lookdown.bas
-'  Vyhledání pozice na které je zadaná hodnota.
-'--------------------------------------------------------------
-'$sim                                   '!!!Odstranit pøi programování - zrychlení simulace (odstraní èasové prodlevy)
-$regfile = "m88def.dat"                 ' specify the used micro
+' Lookdown.bas
+' Search for the position where the value is entered.
+'------------------------------------------------ -------------
+'$sim                                        '!!!Remove when programming - acceleration of simulation (removal of time delay)
+$regfile = "m8def.dat"                                      ' specify the used micro
 $baud = 9600
-$crystal = 8000000                      ' used crystal frequency
+$crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
-Dim Pozice As Integer , Hodnota As Byte
-
- ''''''''''''''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''
-'Tento pøíklad zkoušejte v simulátoru. Použijte tlaèítko "Run program".
-
+Dim Position As Integer , Value As Byte
+''''''''''''''''''''''''' MAIN PROGRAM ''''''''''''''''''' ''''''''''''''
+'Try this example in the simulator. Use the "Run program" button.
 Do
 
-'vstup z klávesnice ulož do promìnné "Hodnota":
-    Input "Zadej hodnotu do 241 [Enter] : " , Hodnota
+'save the input from the keyboard into the "Value" variable:
+    Input "Zadej hodnotu do 241 [Enter] : " , Value
 
-'prohledej 15 pozic v tabulce "Moje_tabulka" a vra pozici, na které je èíslo "hodnota" (když èíslo v tabulce není, vrátí -1)
-    Pozice = Lookdown(hodnota , Moje_tabulka , 15)
+'search 15 positions in the table "My_table" and return the position where the number is "value" (if the number is not in the table, it returns -1)
 
-      If Pozice > 0 Then                'našel èíslo
-        Print "Pozice = " ; Pozice
-        Print                           'prázdný øádek
+    Position = Lookdown(Value , Moje_tabulka , 15)
 
-      Else                              'Pozice = -1, nenašel èíslo
-        Print "Hodnota není v tabulce"
+      If Position > 0 Then                                  'found the number
+        Print "Position = " ; Position
+        Print                                               'blank line
+
+      Else                                                  'Position = -1, no number found
+        Print "Value není v tabulce"
         Print
       End If
 Loop
@@ -38,24 +37,23 @@ Loop
 End
 
 Moje_tabulka:
-Data 0 , 17 , 34 , 52 , 69 , 87 , 104 , 121 , 139 , 156 , 173 , 190 , 207 , 224 , 241       'hodnota
-'    1    2    3    4    5    6     7     8     9    10    11    12    13    14    15       'pozice
+Data 0 , 17 , 34 , 52 , 69 , 87 , 104 , 121 , 139 , 156 , 173 , 190 , 207 , 224 , 241       'Value
+'    1    2    3    4    5    6     7     8     9    10    11    12    13    14    15       'Position
+'When we need a lot of constants in the program, we create a table with the Data command.
+'It will be stored in the program memory, so it can be quite large.
 
-'Když v programu potøebujeme hodnì konstant, vytvoøíme tabulku pøíkazem Data.
-'Bude uložena v pamìti programu, takže mùže být i dost velká.
+'In the table, we have to specify the type of number with the ending. The endings are:
 
-'V tabulce musíme koncovkou urèit typ èísla. Koncovky jsou:
-
-'byte    - žádná
-'word    - %
+'byte - none
+'word - %
 'integer - %
-'long    - &
-'single  - !
+'long - &
+'single - !
 
-'Tabulku píšeme na úplný konec kódu.
+'We write the table at the very end of the code.
 
-'Když chceme postupnì èíst hodnoty z tabulky, použijeme pøíkazy RESTORE a READ. (viz data.bas)
-'Když chceme zjistit jaká hodnota je na urèité pozici, použijeme LOOKUP.        (viz Lookup.bas)
-'Když chceme zjistit na které pozici je urèitá hodnota, použijeme LOOKDOWN.
-'U pøíkazu LOOKUP zaèínají pozice nulou, u pøíkazu LOOKDOWN jednièkou.
-'Promìnná, do které èteme, musí být stejného typu jako ètená hodnota.
+'When we want to sequentially read values ??from the table, we use the RESTORE and READ commands. (see data.bass)
+'When we want to find out what value is at a certain position, we use LOOKUP. (see Lookup.bas)
+'When we want to find out in which position a certain value is, we use LOOKDOWN.
+'Positions start with zero for the LOOKUP command, and one for the LOOKDOWN command.
+'The variable we read into must be of the same type as the read value.

@@ -9,89 +9,91 @@
 
  ''''''''''''''' DIREKTIVY PØEKLADAÈE ''''''''''''''''''''''''''''''''''''''''
 '$sim                                    '!!!Odstranit pøi programování - zrychlení simulace
-$regfile = "m88def.dat"                 'Soubor s deklaracemi
-$crystal = 8000000                      'Kmitoèet oscilátoru v Hz
+$regfile = "m8def.dat"                                     'Soubor s deklaracemi
+$crystal = 8000000                                          'Kmitoèet oscilátoru v Hz
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
- ''''''''''''''' INICIALIZACE ''''''''''''''''''''''''''''''''''''''''''''''''
+ '''''''''''''' INITIALIZATION '''''''''''''''''''''''''''''' ''''''''''''''
 
-'Dim Temp as byte                       'pøíklad deklarace promìnné
-'Declare Sub Myproc(x as word)          'pøíklad deklarace procedury  
- Config Portb.0 = Output                'PB0 nastav jako výstupní
+'Dim Temp as byte                ' variable declaration example
+'Declare Sub Myproc(x as word)   'example procedure declaration
+ Config Portb.0 = Output                                    'PB0 set as output
 
- ''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''''''''''''''
- 
- Do                                      'zaèátek hlavní smyèky Do-Loop
-   Set Portb.0                          'Portb.0=1(+5V), dioda svítí
-   Waitms 250                           'èekej 250 milisekund
-   Reset Portb.0                        'Portd.0=0(zem), dioda nesvítí
-   Waitms 250                           'èekej 250 milisekund
- Loop                                   'konec hlavní smyèky - jdi na Do
+ ''''''''''''''' MAIN PROGRAM '''''''''''''''''''''''''''''' ''''''''''''''
 
- ''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''''''''''''''
- End
 
- ''''''''''''''' KÓD PODPROGRAMÙ, PROCEDUR A FUNKCÍ  ''''''''''''''''''''''''''
-  
+ Do                                                         'the beginning of the main Do-Loop
+   Set Portb.0                                              'Portb.0=1(+5V), the diode lights up
+   Waitms 250                                               'wait 250 milliseconds
+   Reset Portb.0                                            'Portd.0=0(ground), the diode is not lit
+   Waitms 250                                               'wait 250 milliseconds
+ Loop                                                       'end of main loop - go to Do
+
+ ''''''''''''''' END OF MAIN PROGRAM '''''''''''''''''''''''''''''' ''''''
+ end
+
+ ''''''''''''''' CODE OF SUBROUTINES, PROCEDURES AND FUNCTIONS ''''''''''''''''''''''''
+
+
 
 
 '(
- '''''''''''''''''''''''''''
- Popis programu
-'''''''''''''''''''''''''''
- Typický program má ètyøi èásti:
- 
- 1. DIREKTIVY PØEKLADAÈE
- 
- Direktivu $sim použijeme pøi simulaci. Pøed zapsáním kódu do procesoru ji
- odstraníme (napíšeme pøed ni apostrof).
+ ''''''''''''''''''''''''
+ Program description
+''''''''''''''''''''''''
+ A typical program has four parts:
 
- $regfile - øíká pøekladaèi jaký typ mikroprocesoru použijeme
- $crystal - informuje pøekladaè o tom, jaká je frekvence oscilátoru v mikroprocesoru
+ 1. TRANSLATOR'S DIRECTIVES
+
+ We will use the $sim directive during the simulation. Before writing the code into the processor
+ we remove (we write an apostrophe before it).
+
+ $regfile - tells the compiler what type of microprocessor we will use
+ $crystal - informs the compiler about the oscillator frequency in the microprocessor
 
  $hwstack = 100
  $swstack = 64
  $framesize = 64
 
- Tyto direktivy vymezují v pamìti dat prostor pro ukládání návratových adres
- z podprogramù, pro pøedávání promìnných funkcím a pro ukládání lokálních promìnných.
+ These directives define the space in data memory for storing return addresses
+ from subroutines, for passing variables to functions and for storing local variables.
 
-------------------------------------------------------------------------------
+-------------------------------------------------- ----------------------------
 
- 2. INICIALIZACE
+ 2. INITIALIZATION
 
- Tady deklarujeme promìnné, procedury a funkce. 
- Dále zde nastavíme konfiguraci portù, èítaèù a jiných periférií,
- obecnì zde píšeme pøíkazy, které staèí provést jednou, které se nemusí opakovat 
- pøi každém prùchodu hlavní smyèkou.
-  
+ This is where we declare variables, procedures and functions.
+ Next, here we set the configuration of ports, counters and other peripherals,
+ in general, we write commands here that need to be executed once, which do not need to be repeated
+ at each passage through the main loop.
+
  Config Portb.0 = Output
- vývod, na kterém je dioda, musíme nastavit jako výstup,
- jinak pøíkazy SET a RESET nebudou mít žádný efekt.
+ we have to set the terminal on which the diode is as output,
+ otherwise the SET and RESET commands will have no effect.
 
-------------------------------------------------------------------------------
+-------------------------------------------------- ----------------------------
 
- 3. HLAVNÍ PROGRAM
+ 3. MAIN PROGRAM
 
- V hlavním programu je nekoneèná smyèka Do-Loop. Øíká se jí také Hlavní smyèka. 
- V ní se každých 250 ms zmìní úroveò na vývodu PB0.
- Pøíkaz SET nastaví bit  (na hodnotu 1).
- Pøíkaz RESET nuluje bit (na hodnotu 0).
- Pøíkaz End oznaèuje konec hlavního programu.
- Pøíkaz Waitms 250 znamená, že procesor èeká 250 milisekund.
+ In the main program there is an infinite Do-Loop loop. It is also called the Main Lake.
+ In it, the level at the PB0 terminal changes every 250 ms.
+ The SET command sets the bit (to 1).
+ The RESET command resets the bit (to the value 0).
+ The End command marks the end of the main program.
+ The Waitms 250 command means that the processor waits for 250 milliseconds.
 
- 
- V každém programu je jen jedna hlavní smyèka DO - LOOP.
- Jakmile program provede pøíkazy v èásti INICIALIZACE,  
- vstoupí do této smyèky ve které pak bìhá stále dokola. Z této smyèky
- nemùže (a nesmí) vystoupit.
- To je typický zpùsob práce mikroprocesoru.
 
-------------------------------------------------------------------------------
+ There is only one main loop DO - LOOP in each program.
+ Once the program executes the commands in the INITIALIZATION section,
+ enters this loop in which it then runs round and round. From this smile
+ cannot (and must not) exit.
+ This is the typical way a microprocessor works.
 
- 4. PODPROGRAMY
+-------------------------------------------------- ----------------------------
 
- Tady píšeme kód podprogramù, procedur a funkcí. 
+ 4. SUBROUTINES
+
+ Here we write the code of subroutines, procedures and functions.
 ')
