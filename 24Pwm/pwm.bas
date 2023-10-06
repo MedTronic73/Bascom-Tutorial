@@ -1,50 +1,50 @@
-'''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''
 'PWM.bas
 '
-'Osmibitová pulsnì šíøková modulace
-'Napìtí na pinu PB1 se plynule mìní mezi 0 - 5V - 0 - 5V ... atd
-'Led na PB1
-'''''''''''''''''''''''''''''''''''''
-
+'Eight-bit pulse-width modulation
+'The voltage on pin PB1 varies smoothly between 0 - 5V - 0 - 5V ... etc
+'Ice on PB1
+'''''''''''''''''''''''''''''''''
 '$sim
-$regfile = "m88def.dat"                 'Soubor s deklaracemi
-$crystal = 8000000                      'Kmitoèet krystalu v Hz
+$regfile = "m8def.dat"                                     'Soubor s deklaracemi
+$crystal = 8000000                                          'Kmitoèet krystalu v Hz
 $baud = 9600
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
 Config Timer1 = Pwm , Pwm = 8 , Prescale = 1 , Compare A Pwm = Clear Up
-Config Portb.1 = Output                 'výstup šíøkovì modulovaného signálu
+Config Portb.1 = Output                                     'width modulated signal output
 
-'''''''''''''''''''''''''''' HLAVNI PROGRAM ''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''' MAIN PROGRAM ''''''''''''''''''''''''''''''''''''
 Defbyte B
 
  Do
-   For B = 20 To 255                    'v tomto cyklu for-next se bìhem 5 vteøin zmìní
-   Pwm1a = B                            'pomìr impuls/mezera plynule z 20/255 na 255/20
+   For B = 20 To 255                                        'in this for-next loop will change within 5 seconds
+   Pwm1a = B                                                'impulse/gap ratio smoothly from 20/255 to 255/20
    Waitms 10
    Next
 
-   For B = 255 To 20 Step -1            'v tomto cyklu for-next se bìhem 5 vteøin zmìní
-   Pwm1a = B                            'pomìr impuls/mezera plynule z 255/20 na 20/255
+   For B = 255 To 20 Step -1                                'in this for-next loop will change within 5 seconds
+   Pwm1a = B                                                'impulse/gap ratio smoothly from 255/20 to 20/255
    Waitms 10
    Next
  Loop
 
-'''''''''''''''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''
- End
+'''''''''''''''''''''''''' END OF MAIN PROGRAM ''''''''''''''''' '''''''
+ end
 
-'Øízení šíøkové modulace je jednoduché - zmìnou promìnné Pwm1a se mìní pomìr
-'impuls/mezera. Maximální hodnota Pwm1a je 255.
-'Pøi Pwma1 = 1 je pomìr 1/255
-'Pøi Pwma1 = 2 je pomìr 2/254
-'Pøi Pwma1 = 10 je pomìr 10/246 atd
+'Controlling the width modulation is simple - changing the variable Pwm1a changes the ratio
+'impulse/gap. The maximum value of Pwm1a is 255.
+'When Pwma1 = 1, the ratio is 1/255
+'When Pwma1 = 2, the ratio is 2/254
+'When Pwma1 = 10, the ratio is 10/246, etc
 
-'Nastavení Timer1 pro PWM:
+'Setting Timer1 for PWM:
 'Config Timer1 = Pwm , Pwm = 8 , Prescale = 1 , Compare A Pwm = Clear Up
 
-'Pwm = 8                    - osmibitová PWM (Pwm1a = 1 až 255)
-'Prescale = 1               - opak.kmit = 16 kHz (pøi oscilátoru 8MHz)
-''(Prescale = 8             - opak.kmit = 16/8 kHz) atd
-'Compare A Pwm = Clear Down - polarita výstupních impulsù je opaèná než pøi Clear Up
+'Pwm = 8 - eight-bit PWM (Pwm1a = 1 to 255)
+'Prescale = 1 - repetition rate = 16 kHz (with an 8MHz oscillator)
+''(Prescale = 8 - op.oscillation = 16/8 kHz) etc
+'Compare A Pwm = Clear Down - the polarity of the output pulses is opposite to Clear Up
+
