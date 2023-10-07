@@ -1,53 +1,53 @@
 
-'--------------------------------------------------------------
+'------------------------------------------------ -------------
 ' Asm1.bas
 '
-' Použití asembleru v Bascomu.
+' Using assembler in Bascom.
 '
-' Mezi vývod PD0 a +5V pøipojte diodu LED v sérii s odporem.
-' Dioda bliká asi 2x za vteøinu.
-'--------------------------------------------------------------
+' Connect an LED in series with a resistor between the PD0 and +5V terminals.
+' The diode flashes about 2x per second.
+'------------------------------------------------ -------------
+
 
 '$sim                                    '!!!Odstranit pøi programování - zrychlení simulace
-$regfile = "m88def.dat"                 ' specify the used micro
+$regfile = "m8def.dat"                                      ' specify the used micro
 $baud = 9600
-$crystal = 8000000                     ' used crystal frequency
+$crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
-Config Portd.0 = Output                 'PD0 nastav jako výstupní
+Config Portd.0 = Output                                     'PD0 nastav jako výstupní
 
- ''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''''''''''''''
-  Do                                    'zaèátek smyèky Do-Loop
-   sbi portd,0                          'Portd.0=1(+5V), dioda nesvítí
-   Waitms 250                           'èekej 250 milisekund
-   cbi Portd,0                          'Portd.0=0(zem), dioda svítí
-   Waitms 250                           'èekej 250 milisekund
-Loop                                    'jdi na Do
+ ''''''''''''''' MAIN PROGRAM '''''''''''''''''''''''''''''''''''''''''''''''
+  Do                                                        'zaèátek smyèky Do-Loop
+   sbi portd,0                                              'Portd.0=1(+5V), dioda nesvítí
+   Waitms 250                                               'èekej 250 milisekund
+   cbi Portd,0                                              'Portd.0=0(zem), dioda svítí
+   Waitms 250                                               'èekej 250 milisekund
+Loop                                                        'jdi na Do
 
- ''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''''''''''''''
- End
+''''''''''''''' END OF MAIN PROGRAM '''''''''''''''''''''''''''''' ''''''
+ end
 
-'První možnost je kombinovat pøíkazy Bascomu a asembleru, jako v tomto kódu.
-'Bascom sám rozezná instrukce asembleru.
+'The first option is to combine Bascom and assembler commands, as in this code.
+'Bascom itself recognizes assembler instructions.
 
-'Vyjímkou jsou instrukce SUB, SWAP, CALL, OUT, které používají oba jazyky.
-'Proto pokud mají být brány jako asemblerové, napíšeme pøed nì vykøièník.
+'Exceptions are the instructions SUB, SWAP, CALL, OUT, which are used by both languages.
+'Therefore, if they are to be taken as assemblers, we will write an exclamation point before them.
 
-'Pøíklad:
-'dim a as byte, b as byte   'pøehoï obsah promìnných (a=b  b=a)
-'swap a,b
+'Example:
+'dim a as byte, b as byte 'overwrite the contents of the variables (a=b b=a)
+'swap a, b
 
-'push r16                   ' pøehoï nibly v promìnné a
+'push r16 ' convert nibles into variable a
 'lds r16,{a}
 '!swap r16
 'sts {a},r16
 'pop r16
-'...............................................................................
+'................................................ ..............................
 
-'Pokud v asemblerové èásti použijeme pracovní registry , musíme je uložit(push - pop).
-
+'If we use working registers in the assembler part, we have to save them (push - pop).
 
 
 

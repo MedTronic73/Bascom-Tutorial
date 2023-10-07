@@ -1,50 +1,52 @@
-'--------------------------------------------------------------
+'------------------------------------------------ -------------
 '
-'  Uart.bas
-' K vyzkoušení seriové komunikace mezi mikroprocesorem a PC
-' použijeme rozhraní, které je na obrázku UART.jpg.
+' Uart.bass
+' To test serial communication between microprocessor and PC
+' we will use the interface that is in the image UART.jpg.
 '
-' Zkoušel jsem s terminály AccessPort a Hercules.
-'--------------------------------------------------------------
+' I tried with AccessPort and Hercules terminals.
+'------------------------------------------------ -------------
+
 '$sim                                    '!!!Odstranit pøi programování - zrychlení simulace (odstraní èasové prodlevy)
-$regfile = "m88def.dat"                 ' specify the used micro
+$regfile = "m8def.dat"                                      ' specify the used micro
 $baud = 9600
-$crystal = 8000000                      ' used crystal frequency
+$crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
 
 Dim Byt As Byte , Temp As Long
-Dim Str As String * 10
- ''''''''''''''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''
+Dim Mystr As String * 10
+
+''''''''''''''''''''''''''' MAIN PROGRAM '''''''''''''''''''''''''''''''''''
 
 Do
 
    Print
-   Print "Ahoj"
+   Print "Hello"
    Print
 
    Temp = 270001
    Print "Temp = " ; Temp
-   Print                                'prázdný øádek
+   Print                                                    'blank line
    Waitms 500
 
-   Input "Napis text [Enter]: " , Str   'tady je nutný Enter
-   Print Str
+   Input "Write a text [Enter]: " , Mystr                     'Enter is required here
+   Print Mystr
    Print
    Waitms 500
 
-   Print "cekam na znak"
-     For Temp = 1 To 1000000            'tady není tøeba Enter
-     Byt = Inkey()                      'pøišel znak?
+   Print "I'm waiting for a sign"
+     For Temp = 1 To 1000000                                'No need to enter here
+     Byt = Inkey()                                          'has the sign come?
 
-     If Byt > 0 Then                    '0 = ne
-     Print "prisel znak " ; Chr(byt)    'ano
+     If Byt > 0 Then                                        '0 = ne
+     Print "Recived " ; Chr(byt)                            'Yes
      End If
 
      Next
 Loop
 
- ''''''''''''''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''
+ ''''''''''''''''''''''''''' END OF MAIN PROGRAM ''''''''''''''''''''''''''
 End

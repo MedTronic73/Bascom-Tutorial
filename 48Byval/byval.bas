@@ -1,99 +1,99 @@
-'--------------------------------------------------------------
+'------------------------------------------------ -------------
 '
-'  Byval.bas
+' Byval.bas
 '
-'  Dva zpùsoby pøedávání argumentù procedurám a funkcím:
-'  Odkazem  (Byref)
-'  Hodnotou (Byval)
-'--------------------------------------------------------------
+' Two ways of passing arguments to procedures and functions:
+' By reference (Byref)
+' By value (Has been)
+'------------------------------------------------ -------------
 '$sim                                    '!!!Odstranit pøi programování - zrychlení simulace (odstraní èasové prodlevy)
-$regfile = "m88def.dat"                 ' specify the used micro
+$regfile = "m8def.dat"                                      ' specify the used micro
 $baud = 9600
-$crystal = 8000000                      ' used crystal frequency
+$crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
 
-'Jsou dvì možnosti jak pøedávat argumenty procedurám a funkcím:
+'There are two ways to pass arguments to procedures and functions:
+'------------------------------------------------ -----------------------------
+'Passing by reference, the address of the variable is passed
+'we don't need to specify the Byref keyword,this method is preset in Bascom.
+'For strings and fields, the address of the first character or value is passed.
+'The function works directly with the passed variables.
+'If we change the passed variable in the function, the original variable will change.
 
-'------------------------------------------------------------------------------
-'--Pøedání odkazem (referencí), pøedává se adresa promìnné (klíèové slovo Byref nemusíme uvádìt, tento zpùsob je v Bascomu pøednastaven).
-'U stringù a polí se pøedává adresa prvního znaku nebo hodnoty.
-'Ve funkci se pracuje pøímo s pøedávanými promìnnými.
-'Pokud ve funkci zmìníme pøedanou promìnnou, zmìní se pùvodní promìnná.
-
-   'Function zvetsi(x as byte)
+   'Function increase(x as byte)
    'x = x + 1
-   'zvetsi = x
+   'increase = x
    'End func
 
    'byte_prom = 1
-   'byte_prom1 = zvetsi(byte_prom)
-   '((byte_prom je teï 2, byte_prom1 je teï 2)
+   'byte_prom1 = increase(byte_prom)
+   'byte_prom is now 2, byte_prom1 is now 2
 
-'------------------------------------------------------------------------------
-'--Pøedání hodnotou, pøedává se kopie hodnoty promìnné nebo konstanty (klíèové slovo Byval).
-'Ve funkci se pracuje s kopiemi pøedávaných promìnných.
-'Pokud ve funkci zmìníme pøedanou promìnnou, pùvodní promìnná se nezmìní.
+'------------------------------------------------ -----------------------------
+'Passing by value, a copy of the value of a variable or constant is passed (keyword Byval).
+'The function works with copies of passed variables.
+'If we change the passed variable in the function, the original variable will not change.
 
-   'Function zvetsi(byval x as byte)
+   'Function increase (used to be x as byte)
    'x = x + 1
-   'zvetsi = x
+   'increase = x
    'End func
 
    'byte_prom = 1
-   'byte_prom1 = zvetsi(byte_prom)
-   '((byte_prom je stále 1, byte_prom1 je teï 2)
+   'byte_prom1 = increase(byte_prom)
+   'byte_prom is still 1, byte_prom1 is now 2
 
-'------------------------------------------------------------------------------
-'Deklarace funkcí:
-Declare Function Secti(x As Byte , Byref Y As Byte) As Byte       'pøedání argumentù odkazem (adresou)
-Declare Function Sectib(byval X As Byte , Byval Y As Byte) As Byte       'pøedání argumentù hodnotou
+'------------------------------------------------ -----------------------------
 
-Function Secti(x As Byte , Y As Byte) As Byte       'pøedává se adresa x , y
-Secti = X + Y
+'Declaration of functions:
+Declare Function Secti(x As Byte , Byref Y As Byte) As Byte 'passing arguments by reference (address)
+Declare Function Sectib(byval X As Byte , Byval Y As Byte) As Byte       'passing arguments by value
+
+Function Secti(x As Byte , Y As Byte) As Byte               'the address x , y is passed
+   Secti = X + Y
 End Function
 
-Function Sectib(byval X As Byte , Byval Y As Byte) As Byte       'pøedává se hodnota x , y  (by value=hodnotou)
-Sectib = X + Y
+Function Sectib(byval X As Byte , Byval Y As Byte) As Byte  'value x , y is passed (by value=value)
+   Sectib = X + Y
 End Function
 
 
-Dim Cislo1 As Byte At &H110 , Cislo2 As Byte At &H111       'adresa promìnné cislo1 je &h110, cislo2 &h111
-Dim Vysledek As Byte
+Dim Number1 As Byte At &H110 , Number2 As Byte At &H111     'address of variable number1 is &h110, number2 &h111
+Dim Result As Byte
 
-Cislo1 = 5
-Cislo2 = 7
+Number1 = 5
+Number2 = 7
 
-'Pøedání odkazem (adresou):
-Vysledek = Secti(cislo1 , Cislo2)       'pøedávané argumenty jsou &h110 a &h111 (adresy cislo1, cislo2)
-'Toto je v poøádku, funkce seète hodnoty na adresách &h110 a &h111.
+'Submission by link (address):
+Result = Secti(number1 , Number2)                           'passed arguments are &h110 and &h111 (addresses number1, number2)
+'This is fine, the function sums the values ??at addresses &h110 and &h111.
 
-Vysledek = Secti(cislo1 , 10)           'pøièti 10 k cislo1
-'Ale co teï? Funkce seète èíslo na adrese &h110 s èíslem na adrese 10 (tam je registr R10).
-'To není to co chceme. Potøebujeme øíci funkci, že 10 není adresa ale pøímo hodnota.
-'Použijeme proto funkci Sectib, která pøedává argumenty hodnotou.
+'Result = Secti(number1 , 10)                                'add 10 to number1
+'But what now? The function adds the number at address &h110 with the number at address 10 (there is register R10).
+'This is not what we want. We need to tell the function that 10 is not an address but a direct value.
+'We will therefore use the Sectib function, which passes arguments by value.
 
-'Pøedání hodnotou:
-Vysledek = Sectib(cislo1 , 10)          'pøedávané argumenty jsou 5 a 10
-'Teï je všechno v poøádku.
+'Passing by value:
+Result = Sectib(number1 , 10)                               'passed arguments are 5 and 10
+'Everything is fine now.
 
-'Mùžeme pøedat každý argument jinak:
+'We can pass each argument differently:
 'Declare Function Secti(x As Byte , Byval Y As Byte) As Byte
 
-'Nìkoho možná napadne, proè se nepøedává vždy hodnotou. Argumenty se pøedávají pøes
-'oblast v RAM a tam by se rozsáhlé promìnné nevešly (napø velká pole, stringy apod.)
+'Someone may wonder why it is not always sold by value. Arguments are passed through
+'area in RAM and large variables would not fit there (eg large fields, strings, etc.)
 
-'Jednoduché pravidlo je že Byval použijeme, když chceme pøedávat konstanty.
-'Ostatnì pøekladaè nás sám upozorní, kde má být Byval.
+'The simple rule is that we use Byval when we want to pass constants.
+'Besides, the translator himself will inform us where Byval is supposed to be.
 
-
- ''''''''''''''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''
+ ''''''''''''''''''''''''''' MAIN PROGRAM '''''''''''''''''''''''''''''''''''
 
 Do
 
 Loop
 
- ''''''''''''''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''
+ ''''''''''''''''''''''''''' END OF MAIN PROGRAM  ''''''''''''''''''''''''''
 End

@@ -1,6 +1,6 @@
-Report       : voltmetr
+Report       : uart
 Date         : 10-07-2023
-Time         : 11:35:51
+Time         : 11:45:55
 
 Compiler     : BASCOM-AVR LIBRARY V 2.0.7.3
 Processor    : M8
@@ -8,9 +8,9 @@ SRAM         : 400 hex
 EEPROM       : 200 hex
 ROMSIZE      : 2000 hex
 
-ROMIMAGE     : 742 hex  -> Will fit into ROM
-ROMIMAGE     :  1858 dec
-FLASH USED   :  22  %
+ROMIMAGE     : 312 hex  -> Will fit into ROM
+ROMIMAGE     :  786 dec
+FLASH USED   :  9  %
 BAUD         : 9600 Baud
 XTAL         : 8000000 Hz
 BAUD error   : 0.16%
@@ -21,7 +21,7 @@ S-Stacksize  : 40 hex
 S-Stackstart : 3FC hex
 Framesize    : 40 hex
 Framestart   : 37C hex
-Space left   :  775  dec
+Space left   :  779  dec
 
 LCD DB7      : PORTB.7
 LCD DB6      : PORTB.6
@@ -58,11 +58,9 @@ COMPARE1                         Word              004A          74
 PWM1B                            Word              0048          72 
 COMPARE1B                        Word              0048          72 
 ERR                              Bit               0006          6 
-I                                Byte              0060          96 
-ADC_VALUE                        Word              0061          97 
-AVERAGE                          Single            0063          99 
-SUMA                             Word              0067          103 
-LCD_STRING                       String            0069          105 
+BYT                              Byte              0060          96 
+TEMP                             Long              0061          97 
+MYSTR                            String            0065          101 
 
 --------------------------------------------------------------------------------
 Constant                         Value
@@ -403,7 +401,7 @@ _RTSCTS4                         0
 _CHIP                            17
 _RAMSIZE                         1024
 _ERAMSIZE                        512
-_SIM                             1
+_SIM                             0
 _BASE                            1
 _XTAL                            8000000
 _BUILD                           20730
@@ -413,7 +411,7 @@ _ROMSIZE                         8192
 _DOSFILEWRITE                    0
 _DOSDIRWRITE                     0
 _1WEXT                           0
-_ADC_REFMODEL                    8
+_ADC_REFMODEL                    0
 _UARTS                           1
 _HWSTACKSTART                    1119
 _TIMEOUT                         0
@@ -423,25 +421,6 @@ _HWSTACK_LOW                      1019
 _SWSTACK_LOW                      956
 _FRAME_HIGH                       956
 _XMEGA                           0
-REF                              5.000
-_LCDDB4                          &H18
-_LCDDB4_PIN                      4
-_LCDDB4DIR                       &H17
-_LCDDB5                          &H18
-_LCDDB5_PIN                      5
-_LCDDB5DIR                       &H17
-_LCDDB6                          &H18
-_LCDDB6_PIN                      6
-_LCDDB6DIR                       &H17
-_LCDDB7                          &H18
-_LCDDB7_PIN                      7
-_LCDDB7DIR                       &H17
-_LCDDBE                          &H18
-_LCDDBE_PIN                      3
-_LCDDBEDIR                       &H17
-_LCDDBRS                         &H18
-_LCDDBRS_PIN                     2
-_LCDDBRSDIR                      &H17
 
 
 --------------------------------------------------------------------------------

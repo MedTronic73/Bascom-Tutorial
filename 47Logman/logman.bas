@@ -1,105 +1,107 @@
-'--------------------------------------------------------------
+'------------------------------------------------ -------------
 '
-'  Logman.bas
+' Logman.bass
 '
-'  Bitové manipulace
-'--------------------------------------------------------------
-'$sim                                    '!!!Odstranit pøi programování - zrychlení simulace (odstraní èasové prodlevy)
-$regfile = "m88def.dat"                 ' specify the used micro
+' Bit manipulations
+'------------------------------------------------ -------------
+'$sim                         '!!!Remove when programming - acceleration of simulation (removal of time delay)
+$regfile = "m8def.dat"                                      ' specify the used micro
 $baud = 9600
-$crystal = 8000000                      ' used crystal frequency
+$crystal = 8000000                                          ' used crystal frequency
 $hwstack = 100
 $swstack = 64
 $framesize = 64
 
 Defbyte B
 Defint I
- ''''''''''''''''''''''''''' HLAVNI PROGRAM '''''''''''''''''''''''''''''''''''
-'Zkuste v simulátoru
+''''''''''''''''''''''''' MAIN PROGRAM ''''''''''''''''''' ''''''''''''''
+'Try it in the simulator
 
-'Bitové AND
-'Poøebujeme vynulovat nìkteré bity:
-B_cislo = &B_1010_0101                  'chceme vynulovat bity 0,1,2,3
-B_maska = &B_1111_0000                  'kde je v masce 0, bude ve výsledku 0, ostatní bity se nezmìní
+'Bitwise AND
+'We need to reset some bits:
+
+B_number = &B_1010_0101                                     'we want to reset bits 0,1,2,3
+B_mask = &B_1111_0000                                       'where there is a 0 in the mask, it will be 0 in the result, the other bits will not change
 '  vysl =    1010_0000
-B_vysl = B_cislo And B_maska
+B_vysl = B_Number And B_Mask
 Print Bin(b_vysl)
 
-'Bitové OR
-'Poøebujeme nastavit nìkteré bity:
-B_cislo = &B_1010_0101                  'chceme nastavit bity 0,1,2,3
-B_maska = &B_0000_1111                  'kde je v masce 1, bude ve výsledku 1, ostatní bity se nezmìní
+'Bitwise OR
+'We need to set some bits:
+B_number = &B_1010_0101                                     'we want to set bits 0,1,2,3
+B_mask = &B_0000_1111                                       'where there is a 1 in the mask, there will be a 1 in the result, the other bits will not change
 '  vysl =    1010_1111
-B_vysl = B_cislo Or B_maska
+B_vysl = B_Number Or B_Mask
 Print Bin(b_vysl)
 
-'Bitové XOR
-'Potøebujeme negovat nìkteré bity:
-B_cislo = &B_1110_0101                  'chceme negovat bity 0,1,6
-B_maska = &B_0100_0011                  'kde je v masce 1, bude ve výsledku negace, ostatní bity se nezmìní
+'Bitwise XOR
+'We need to negate some bits:
+B_number = &B_1110_0101                                     'we want to negate bits 0,1,6
+B_Mask = &B_0100_0011                                      'where there is a 1 in the mask, the result will be negation, the other bits will not change
 '  vysl =    1010_0110
-B_vysl = B_cislo Xor B_maska
+B_vysl = B_Number Xor B_Mask
 Print Bin(b_vysl)
 
-'Bitový posun
+'Bit shift
 ''''''''''''''
-'pøíkaz
-'shift cislo , LEFT , 1
-'posune všechny bity promìnné cislo o 1 místo doleva. Zprava doplní nulu, bit
-'který byl úplnì vlevo se ztratí.
+'command
+'shift number, LEFT, 1
+'shifts all bits of variable number 1 place to the left. Right complement zero, bit
+'which was completely to the left will be lost.
 
-'pøíkaz
-'shift cislo , LEFT , 2
-'posune bity podobnì o dvì místa atd.
+'command
+'shift number, LEFT, 2
+'shifts the bits similarly by two places, etc.
 
-'pøíklad:
-Bajt = &B_0001_1111
-Print Bin(bajt)                         '31
-Shift Bajt , Left , 1
-Print Bin(bajt)                         '62
-Shift Bajt , Left , 1
-Print Bin(bajt)                         '124
-Shift Bajt , Left , 1
-Print Bin(bajt)                         '248
+'example:
 
-'Posunem o jeden bit doleva se èíslo vynásobí dvìma,
-'posunem o dva bity se vynásobí ètyømi atd.
+B_byte = &B_0001_1111
+Print Bin(B_Byte)                                             '31
+Shift B_Byte , Left , 1
+Print Bin(B_Byte)                                             '62
+Shift B_Byte , Left , 1
+Print Bin(B_Byte)                                             '124
+Shift B_Byte , Left , 1
+Print Bin(B_Byte)                                             '248
+'Shifting one bit to the left multiplies the number by two,
+'shifting by two bits multiplies by four, etc.
 
-'pøíkaz
-'shift cislo , RIGHT , 1
-'posune všechny bity promìnné cislo o 1 místo doprava. Zleva doplní nulu, bit
-'který byl úplnì vpravo se ztratí.
+'command
+'shift digit , RIGHT , 1
+'shifts all bits of the variable number 1 place to the right. Left complement zero, bit
+'which was far right will be lost.
 
-'Posunem o jeden bit doprava se èíslo vydìlí dvìma,
-'posunem o dva bity se vydìlí ètyømi atd.
+'Shifting one bit to the right divides the number by two,
+'shifting by two bits divides by four, etc.
 
 
 
-'Bitová rotace
+'Bit rotation
 '''''''''''''''''
-'pøíkaz
-'ROTATE  cislo , LEFT , 1
-'posune všechny bity promìnné cislo o 1 místo doleva.
-'Bit který byl úplnì vlevo pøijde na místo úplnì vpravo.
+'command
+'ROTATE number , LEFT , 1
+'shifts all bits of variable number 1 place to the left.
+'The bit that was at the far left will come to the place at the far right.
 
-'Pøíklad:
-'bajt = &b_0111_1000
-'Rotate bajt,Left,1    'bajt= &b_1111_0000
-'Rotate bajt,Left,1    'bajt= &b_1110_0001
-'Rotate bajt,Left,1    'bajt= &b_1100_0011
+'Example:
+'byte = &b_0111_1000
+'Rotate byte,Left,1 'byte= &b_1111_0000
+'Rotate byte,Left,1 'byte= &b_1110_0001
+'Rotate byte,Left,1 'byte= &b_1100_0011
 
-Bajt = 22
-Rotate Bajt , Left , 8
-'jak velký je teï Bajt?
-Print Bajt
 
-'pøíkaz
-'ROTATE  cislo , RIGHT , 1
-'pracuje analogicky v opaèném smìru
+B_Byte = 22
+Rotate B_Byte , Left , 8
+'how big is Byte now?
+Print B_Byte
 
- ''''''''''''''''''''''''''' KONEC HLAVNIHO PROGRAMU ''''''''''''''''''''''''''
+'command
+'ROTATE number , RIGHT , 1
+'works analogously in the opposite direction
+
+ ''''''''''''''''''''''''' END OF MAIN PROGRAM '''''''''''''''''' ''''''
+
 End
-
 
 
 
